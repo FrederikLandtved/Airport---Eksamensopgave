@@ -1,0 +1,11 @@
+﻿@model IEnumerable<AirportAPI.Models.Flight>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+	Html.RenderPartial("_FlightsPartialView");
+}
+

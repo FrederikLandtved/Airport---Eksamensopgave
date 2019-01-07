@@ -1,0 +1,68 @@
+﻿@model IEnumerable<AirportAPI.Models.Flight>
+
+@{
+	ViewData["Title"] = "Index";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Index</h2>
+
+<p>
+
+	<form asp-controller="Flights" asp-action="GetSpecificFlight" method="get">
+		Fra
+		<input type="text" name="fromLocation" />
+		Til
+		<input type="text" name="toLocation" />
+		<input type="submit" value="Søg" />
+	</form>
+
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.AircraftType)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.FromLocation)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ToLocation)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DepartureTime)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ArrivalTime)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.AircraftType)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.FromLocation)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ToLocation)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DepartureTime)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.ArrivalTime)
+				</td>
+				<td>
+					<a asp-controller="Flights" asp-action="Edit" asp-route-id="@item.FlightId">Rediger flyafgang</a>
+
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>
