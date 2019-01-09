@@ -16,7 +16,8 @@ namespace AirportAPI.Controllers
     {
         private readonly AirportDbContext _context;
 
-        public FlightsController(AirportDbContext context)
+
+		public FlightsController(AirportDbContext context)
         {
             _context = context;
         }
@@ -57,7 +58,6 @@ namespace AirportAPI.Controllers
 			var flights = await _context.Flights.Where(f => f.FromLocation == fromLocation & f.ToLocation == toLocation).ToListAsync();
 
 			return Ok(flights);
-
 
 		}
 

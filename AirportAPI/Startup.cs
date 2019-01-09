@@ -29,12 +29,11 @@ namespace AirportAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddMvc();
+			services.AddMvc().AddXmlSerializerFormatters();
 
 			var connectionString = Configuration["connectionStrings:AirportDbConnectionString"];
 
 			services.AddDbContext<AirportDbContext>(o => o.UseSqlServer(connectionString));
-
 			services.AddSwaggerGen(c =>
 			{
 				c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
@@ -57,6 +56,8 @@ namespace AirportAPI
 			});
 
 			app.UseMvc();
+
+
 		}
 	}
 }

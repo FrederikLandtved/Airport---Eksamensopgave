@@ -13,15 +13,13 @@ namespace AirportWEB.Controllers
 {
     public class FlightsController : Controller
     {
-		private readonly AirportDbContext _context;
 		private readonly HttpClient _httpClient;
 		private Uri BaseEndPoint { get; set; }
 
 
-		public FlightsController(AirportDbContext context)
+		public FlightsController()
 		{
 			BaseEndPoint = new Uri("http://localhost:63898/api/flights/");
-			_context = context;
 			_httpClient = new HttpClient();
 		}
 
@@ -42,7 +40,7 @@ namespace AirportWEB.Controllers
 			return View(JsonConvert.DeserializeObject<List<Flight>>(data));
 		}
 
-
+		
 		public async Task<IActionResult> Edit(int? id)
 		{
 			if (id == null)
@@ -50,7 +48,11 @@ namespace AirportWEB.Controllers
 				return NotFound();
 			}
 
-			var flight = await _context.Flights.SingleOrDefaultAsync(m => m.FlightId == id);
+			var response = await _httpClient.GetAsync(BaseEndPoint + $"/{id}", HttpCompletionOption.ResponseHeadersRead);
+
+			var data = await response.Content.ReadAsStringAsync();
+			var flight = JsonConvert.DeserializeObject<Flight>(data);
+
 			if (flight == null)
 			{
 				return NotFound();
@@ -59,6 +61,7 @@ namespace AirportWEB.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		public async Task<IActionResult> Edit(int id, Flight flight)
 		{
 			if (id != flight.FlightId)
@@ -70,12 +73,12 @@ namespace AirportWEB.Controllers
 			{
 				try
 				{
-					_context.Update(flight);
-					await _context.SaveChangesAsync();
+					var response = await _httpClient.PutAsJsonAsync<Flight>(BaseEndPoint + $"/{id}", flight);
+					response.EnsureSuccessStatusCode();
 				}
-				catch (DbUpdateConcurrencyException)
+				catch (HttpRequestException)
 				{
-					if (!FlightExists(flight.FlightId))
+					if (!await FlightExists(flight.FlightId))
 					{
 						return NotFound();
 					}
@@ -90,9 +93,13 @@ namespace AirportWEB.Controllers
 		}
 
 
-		private bool FlightExists(int id)
+		private async Task<bool> FlightExists(int id)
 		{
-			return _context.Flights.Any(e => e.FlightId == id);
+			var response = await _httpClient.GetAsync(BaseEndPoint, HttpCompletionOption.ResponseHeadersRead);
+			response.EnsureSuccessStatusCode();
+			var data = await response.Content.ReadAsStringAsync();
+			var context = JsonConvert.DeserializeObject<List<Flight>>(data);
+			return context.Any(e => e.FlightId == id);
 		}
 
 	}

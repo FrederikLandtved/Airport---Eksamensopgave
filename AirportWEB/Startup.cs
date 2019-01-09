@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AirportAPI.Data;
+using AirportWEB.Middleware;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,8 @@ namespace AirportWEB
 			{
 				app.UseExceptionHandler("/Home/Error");
 			}
+
+			//app.UseMiddleware<IPFilter>();
 
 			app.UseStaticFiles();
 

@@ -16,6 +16,5 @@ namespace AirportAPI.Models
 		public DateTime DepartureTime { get; set; }
 		public DateTime ArrivalTime { get; set; }
 
-
 	}
 }
